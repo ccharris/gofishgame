@@ -8,12 +8,14 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Game {
-
+// set private properties because they are not needed outside of the class. 
 	private ArrayList<Card> computerHand = new ArrayList<Card>();
 	private ArrayList<Card> userHand = new ArrayList<Card>();
+// use of scanner to get user input
 	private Scanner scan = new Scanner(System.in);
 	private ArrayList<Rank> userBooks = new ArrayList<Rank>();
 	private ArrayList<Rank> computerBooks = new ArrayList<Rank>();
+	private String lastChoice = "";
 
 	public void startGame(Deck deck) {
 		// this method needs to:
@@ -39,6 +41,7 @@ public class Game {
 	}
 
 	public void printHand() {
+		// This method needs to print out the user hand in a way that isn't super long and groups like ranks on one line
 		System.out.println("Your hand is:");
 		userHand.sort(Comparator.comparing(Card::getRank));
 		String current = "";
@@ -55,6 +58,7 @@ public class Game {
 	}
 
 	public void printBooks() {
+		//this method needs to check and see if any books are present and print the ones that are
 		if (!userBooks.isEmpty()) {
 			StringBuilder userB = new StringBuilder();
 			System.out.println("You have books of the following ranks:");
@@ -83,6 +87,9 @@ public class Game {
 		// if so display a message saying okay fishing for that rank
 		// check computer hand for that rank
 		// if computer has it say okay
+		// if not go fish
+		// display what is picked up from go fish
+		// also check for empty hand, if empty automatically go fish
 		if (userHand.size() > 0 && !userHand.isEmpty()) {
 			System.out.println("What rank would you like to fish for?");
 
@@ -147,10 +154,11 @@ public class Game {
 	}
 
 	public boolean computerMove(Deck deck) {
+		// computer turn, check and see if user has choice based on logic (other method)
+		// if user does, then add to computer hand
+		// if not computer goes fishing
 		boolean goAgain = false;
 		System.out.println("Computer's turn!");
-		// computer logic, if they have more than one of something ask for one
-		// of those.
 		if(computerHand.size() > 0 && !computerHand.isEmpty()){
 		String choice = computerLogic();
 		System.out.println("User do you have " + choice + "?");
@@ -188,6 +196,7 @@ public class Game {
 	}
 
 	public void transferCardsToUser(String rank) {
+		// this method needs to transfer cards from computer deck to user deck depending on inputted rank
 		if (Arrays.asList(Rank.values()).contains(Rank.valueOf(rank))) {
 			ArrayList<Card> computerDeckCopy = new ArrayList<Card>();
 			// to avoid concurrent modification exception
@@ -204,6 +213,7 @@ public class Game {
 	}
 
 	public void transferCardsToComputer(String rank) {
+		// same as to user method, but from user to computer
 		if (Arrays.asList(Rank.values()).contains(Rank.valueOf(rank))) {
 			ArrayList<Card> userHandCopy = new ArrayList<Card>();
 			// to avoid concurrent modification exception
@@ -220,6 +230,7 @@ public class Game {
 	}
 
 	public boolean containsRank(ArrayList<Card> hand, String rank) {
+		//check and see if the hand contains a card of that rank
 		boolean okChoice = false;
 		try {
 			if (Arrays.asList(Rank.values()).contains(Rank.valueOf(rank))) {
@@ -236,6 +247,9 @@ public class Game {
 	}
 
 	public void checkUserBooks(ArrayList<Card> hand) {
+		// check and see if user has any books. 
+		// to do this will need to create a hashmap that stores each rank and how many times they show up
+		// then if there are four, take all out of the hand, and add that rank to the users books
 		HashMap<Rank, Integer> frequencyMap = new HashMap<Rank, Integer>();
 		for (int i = 0; i < hand.size(); i++) {
 			if (frequencyMap.containsKey(hand.get(i).getRank())) {
@@ -267,6 +281,7 @@ public class Game {
 	}
 
 	public void checkComputerBooks(ArrayList<Card> hand) {
+		// identical method but for computer books instead of user books
 		HashMap<Rank, Integer> frequencyMap = new HashMap<Rank, Integer>();
 		for (int i = 0; i < hand.size(); i++) {
 			if (frequencyMap.containsKey(hand.get(i).getRank())) {
@@ -297,9 +312,10 @@ public class Game {
 		}
 	}
 
-	private String lastChoice = "";
-
 	public String computerLogic() {
+		// helps make the computer make a slightly better than random choice
+		// it checks lastchoice to make sure that it is not just repeating a choice over and over again
+		// otherwise it'll just ask for the highest thing over and over again
 		String choice = "";
 		HashMap<Rank, Integer> frequencyMap = new HashMap<Rank, Integer>();
 		for (int i = 0; i < computerHand.size(); i++) {
@@ -330,6 +346,7 @@ public class Game {
 	}
 
 	public boolean checkIfGameOver() {
+		// see if all the books are done
 		if (userBooks.size() + computerBooks.size() == 13) {
 			return true;
 		} else {
@@ -338,6 +355,7 @@ public class Game {
 	}
 
 	public String checkWinner() {
+		// return who the winner is by comparing book sizes
 		if (userBooks.size() + computerBooks.size() == 13) {
 			if (userBooks.size() > computerBooks.size()) {
 				return "Congrats user, you win!";
