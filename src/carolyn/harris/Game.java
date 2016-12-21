@@ -23,6 +23,7 @@ public class Game {
 		// initialize deck
 		// shuffle deck
 		// and deal 7 cards to both the player and the computer
+		// check and see if there are any books
 		System.out.println("Welcome to Go Fish!");
 		System.out.println("Dealing cards.");
 
@@ -150,6 +151,10 @@ public class Game {
 				System.out.println("There are no more cards left in the deck!");
 			}
 		}
+		sleep();
+		if(checkIfGameOver()){
+			goAgain = false;
+		}
 		return goAgain;
 	}
 
@@ -192,6 +197,10 @@ public class Game {
 
 		checkComputerBooks(computerHand);
 		printBooks();
+		sleep();
+		if(checkIfGameOver()){
+			goAgain = false;
+		}
 		return goAgain;
 	}
 
@@ -335,7 +344,7 @@ public class Game {
 				if (lastChoice != entry.getKey().toString()) {
 					choice = entry.getKey().toString();
 				}
-			} else if (entry.getValue() == 1 && choice.equals("")) {
+			} else if (entry.getValue() == 1) {
 				if (lastChoice != entry.getKey().toString()) {
 					choice = entry.getKey().toString();
 				}
@@ -369,4 +378,11 @@ public class Game {
 		}
 	}
 
+	public void sleep(){
+		try {
+		    Thread.sleep(600);                 
+		} catch(InterruptedException ex) {
+		    Thread.currentThread().interrupt();
+		}
+	}
 }
