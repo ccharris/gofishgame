@@ -9,8 +9,8 @@ public class Main {
 		Deck deck = new Deck();
 		game.startGame(deck);
 		while (isGameOn) {
-			while(game.playerMove(deck) && !game.checkIfGameOver());
-			while(game.computerMove(deck) && !game.checkIfGameOver());
+			game.playerMove(deck);
+			game.computerMove(deck);
 			if (game.checkIfGameOver()) {
 				isGameOn = false;
 			}
